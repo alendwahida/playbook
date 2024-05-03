@@ -3,4 +3,5 @@
 - hosts: dct-gitlabrun-d1
   gather_facts: false
   tasks:
-    - ping:
+    - name: Ping Test
+      ansible.builtin.ping:
