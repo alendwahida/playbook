@@ -2,6 +2,7 @@
 
 - hosts: dct-gitlabrun-d1
   gather_facts: false
+  become: yes
   tasks:
     - name: Ping Test
       shell: ping -c 1 -w 2 8.8.8.8
