@@ -1,5 +1,5 @@
 ---
-- hosts: 10.206.5.116
+- hosts: dct-gitlabrun-d1
   gather_facts: false
   become: yes
   vars_prompt:
