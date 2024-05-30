@@ -1,8 +1,17 @@
 ---
-
 - hosts: dct-gitlabrun-d1
   gather_facts: false
   become: yes
+  vars_prompt:
+    - name: username
+      prompt: "Input Username: "
+      private: no
   tasks:
     - name: Ping Test
       shell: ping -c 1 -w 2 8.8.8.8
+    - name: Shell
+      shell: {{ username }}
+      register: echo_username
+    - name: ECHO
+      debug:
+        msg: {{ echo_username }}
