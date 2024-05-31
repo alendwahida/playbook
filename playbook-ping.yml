@@ -9,7 +9,9 @@
   tasks:
     - name: Ping Test
       shell: ping -c 1 -w 2 8.8.8.8
-    #   register: echo_username
-    # - name: ECHO
-    #   debug:
-    #     msg: "{{ echo_username }}"
+    - name: Test Echo
+      shell: echo {{ username }}
+      register: echo_username
+    - name: ECHO
+        debug:
+          msg: "{{ echo_username }}"
