@@ -13,5 +13,5 @@
       shell: echo {{ username }}
       register: echo_username
     - name: ECHO
-        debug:
-          msg: "{{ echo_username }}"
+      debug:
+        msg: "{{ echo_username }}"
