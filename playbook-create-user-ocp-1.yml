@@ -1,0 +1,65 @@
+- name: OCP Create User
+  hosts: ocp-1-master
+  remote_user: root
+  vars:
+    pwd_alias: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+  tasks:
+    - set_fact:
+        my_pass: "{{ pwd_alias }}"
+    ## Fase Login OCP
+    - name: OC Login
+      shell: oc login -u={{ user_ocp }} -p={{ password_ocp }}
+      register: oc_login
+    ## Backup htpasswd
+    - name: Copy htpasswd
+      ansible.builtin.shell:
+        cmd: cp htpasswd htpasswd-$(date +%F-%T)
+        chdir: /opt/ocp/user/
+      register: copy
+    ## Fase Create User Htpasswd
+    - name: Create User Htpasswd
+      ansible.builtin.shell:
+        cmd: htpasswd -Bb htpasswd {{ username }} {{ my_pass }}
+        chdir: /opt/ocp/user/
+      register: create_htpasswd
+    ## Replace secret user from htpasswd
+    - name: Htpass Secret Replace
+      ansible.builtin.shell:
+        cmd: oc create secret generic htpass-secret-infra --from-file=htpasswd=htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f -
+        chdir: /opt/ocp/user/
+      register: secret_replace
+    ## Ls htpasswd
+    - name: List htpasswd
+      ansible.builtin.shell:
+        cmd: ls -la
+        chdir: /opt/ocp/user/
+      register: ls_user
+    ## Fase Logout OCP
+    - name: OC Logout
+      shell: oc logout
+      register: oc_logout
+#################################################
+    - name: OC Login
+      debug:
+        msg: "{{ oc_login }}"
+    - name: Backup Htpasswd
+      debug:
+        msg: "{{copy.stdout_lines}}"
+    - name: List htpasswd
+      debug:
+        msg: "{{ls_user.stdout_lines}}"
+    - name: Create User
+      debug:
+        msg: "{{ create_htpasswd }}"
+    - name: Secret Replace
+      debug:
+        msg: "{{ secret_replace }}"
+    - name: Password Generated
+      debug:
+        msg:
+          - "URL: https://console-openshift-console.apps.lab.ocp.lan/"
+          - "Username: {{ username }}"
+          - "Password: {{ my_pass }}"
+    - name: OC Logout
+      debug:
+        msg: "{{ oc_logout }}"
